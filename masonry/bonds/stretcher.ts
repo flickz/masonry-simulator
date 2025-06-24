@@ -1,5 +1,6 @@
 import { BaseBond } from "./base";
 import { Brick } from "../brick";
+import { brickTypeSpan } from "../../config";
 
 export class StretcherBond extends BaseBond {
   fillCourse({
@@ -13,34 +14,25 @@ export class StretcherBond extends BaseBond {
     filledUnits: Set<string>;
     numOfUnitsPerCourse: number;
   }) {
-    const isOdd = course % 2 === 1;
     let col = 0;
+    const isOddCourse = course % 2 === 1;
 
-    if (isOdd) {
-      const halfBrick = new Brick(col, course, "half");
-      brickList.push(halfBrick);
-      filledUnits.add(`${course}:${col}`);
-      col += halfBrick.span;
+    if (isOddCourse) {
+      col += this.addBrick("half", course, col, brickList, filledUnits);
     }
 
-    while (col + 1 < numOfUnitsPerCourse) {
+    while (col + brickTypeSpan.full <= numOfUnitsPerCourse) {
       if (!filledUnits.has(`${course}:${col}`)) {
-        const fb = new Brick(col, course, "full");
-        brickList.push(fb);
-
-        for (let k = 0; k < fb.span; k++) {
-          filledUnits.add(`${course}:${col + k}`);
-        }
-        col += fb.span;
+        col += this.addBrick("full", course, col, brickList, filledUnits);
       } else {
         col++;
       }
     }
 
-    if (isOdd && col === numOfUnitsPerCourse - 1) {
-      const halfBrick = new Brick(col, course, "half");
-      brickList.push(halfBrick);
-      filledUnits.add(`${course}:${col}`);
+    if (isOddCourse && col < numOfUnitsPerCourse) {
+      if (numOfUnitsPerCourse - col === brickTypeSpan.half) {
+        this.addBrick("half", course, col, brickList, filledUnits);
+      }
     }
   }
 }

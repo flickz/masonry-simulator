@@ -7,3 +7,5 @@ export type WallConfig = {
   wallBound: Bond;
   layeringOrder: LayeringOrder;
 };
+
+export type BrickType = "full" | "half" | "queen" | "head";

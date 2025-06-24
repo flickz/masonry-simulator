@@ -1,17 +1,14 @@
 import { brickParameters, brickTypeSpan, robotEnvelope } from "../config";
+import { BrickType } from "../types";
 
 export class Brick {
   public column: number;
   public course: number;
-  public type: "full" | "half" | "queenCloser" | "head";
+  public type: BrickType;
   public span: number;
   public stridePos: readonly [number, number];
 
-  constructor(
-    column: number,
-    course: number,
-    type: "full" | "half" | "queenCloser" | "head"
-  ) {
+  constructor(column: number, course: number, type: BrickType) {
     this.column = column;
     this.course = course;
     this.type = type;

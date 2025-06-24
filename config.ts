@@ -34,6 +34,6 @@ export const brickStyles = {
 export const brickTypeSpan = {
   full: 2,
   half: 1,
-  queenCloser: 2,
+  queen: 0.5,
   head: 1,
 };

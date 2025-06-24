@@ -3,9 +3,11 @@ import { brickParameters } from "../config";
 import { Brick } from "./brick";
 import { StretcherBond } from "./bonds/stretcher";
 import { BaseBond } from "./bonds/base";
+import { EnglishBond } from "./bonds/english";
 
 const bonds = {
   stretcher: new StretcherBond(),
+  english: new EnglishBond(),
 };
 
 export class Wall {

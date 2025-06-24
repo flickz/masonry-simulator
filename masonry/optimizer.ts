@@ -10,11 +10,11 @@ export class StrideOptimizer {
   }
 
   optimizeOrder(wall: Wall) {
-    const strideMap = new Map<[number, number], number[]>();
+    const strideMap = new Map<string, number[]>();
 
     // group bricks by stride window
     wall.grid.forEach((brick, index) => {
-      const key = brick.stridePos as [number, number];
+      const key = brick.stridePos.join(":");
       if (!strideMap.has(key)) {
         strideMap.set(key, []);
       }
@@ -31,11 +31,11 @@ export class StrideOptimizer {
     let [cx, cz] = [0, 0]; // start pose
 
     while (visited.size < keys.length) {
-      let bestKey: [number, number] | undefined,
+      let bestKey: string | undefined,
         bestCost = Infinity;
       for (const key of keys) {
         if (visited.has(key)) continue;
-        const [sx, sz] = key;
+        const [sx, sz] = key.split(":").map(Number);
         const cost = heuristic([cx, cz], [sx, sz]);
 
         if (cost < bestCost) {
@@ -44,9 +44,9 @@ export class StrideOptimizer {
         }
       }
 
-      if (!bestKey) break; // safety check
+      if (!bestKey) break;
       visited.add(bestKey);
-      const [nx, nz] = bestKey;
+      const [nx, nz] = bestKey.split(":").map(Number);
       cx = nx;
       cz = nz;
       order.push(...strideMap.get(bestKey)!);
