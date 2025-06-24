@@ -16,8 +16,8 @@ export class AsciiRenderer {
       Array(this.wall.numOfUnitsPerCourse * (UNIT_CHAR_WIDTH + 1)).fill(" ")
     );
 
-    for (let i = 0; i < this.wall.grid.length; i++) {
-      const brick = this.wall.grid[i];
+    for (let i = 0; i < this.wall.totalBricks; i++) {
+      const brick = this.wall.getBrick(i);
       const brickStyle = this.wall.builtBricks.has(i)
         ? brickStyles.built
         : brickStyles.design;

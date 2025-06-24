@@ -1,11 +1,10 @@
 import { brickTypeSpan } from "../../config";
-import { Brick } from "../brick";
 import { BaseBond } from "./base";
-import { BrickType } from "../../types";
+import { BrickDescriptor } from "../../types";
 
 export class EnglishBond extends BaseBond {
   private fillHeaderCourse(
-    brickList: Brick[],
+    brickList: BrickDescriptor[],
     course: number,
     filled: Set<string>,
     units: number
@@ -34,7 +33,7 @@ export class EnglishBond extends BaseBond {
   }
 
   private fillStretcherCourse(
-    brickList: Brick[],
+    brickList: BrickDescriptor[],
     course: number,
     filledUnits: Set<string>,
     numOfUnitsPerCourse: number
@@ -55,7 +54,7 @@ export class EnglishBond extends BaseBond {
     filledUnits,
     numOfUnitsPerCourse,
   }: {
-    brickList: Brick[];
+    brickList: BrickDescriptor[];
     course: number;
     filledUnits: Set<string>;
     numOfUnitsPerCourse: number;

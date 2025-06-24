@@ -9,3 +9,9 @@ export type WallConfig = {
 };
 
 export type BrickType = "full" | "half" | "queen" | "head";
+
+export type BrickDescriptor = {
+  type: BrickType;
+  course: number;
+  column: number;
+};

@@ -1,6 +1,6 @@
 import { BaseBond } from "./base";
-import { Brick } from "../brick";
 import { brickTypeSpan } from "../../config";
+import { BrickDescriptor } from "../../types";
 
 export class StretcherBond extends BaseBond {
   fillCourse({
@@ -9,7 +9,7 @@ export class StretcherBond extends BaseBond {
     filledUnits,
     numOfUnitsPerCourse,
   }: {
-    brickList: Brick[];
+    brickList: BrickDescriptor[];
     course: number;
     filledUnits: Set<string>;
     numOfUnitsPerCourse: number;

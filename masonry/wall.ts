@@ -1,4 +1,4 @@
-import { Bond } from "../types";
+import { Bond, BrickDescriptor } from "../types";
 import { brickParameters } from "../config";
 import { Brick } from "./brick";
 import { StretcherBond } from "./bonds/stretcher";
@@ -11,10 +11,11 @@ const bonds = {
 };
 
 export class Wall {
-  public grid: Brick[];
+  public brickLayout: BrickDescriptor[];
   public numOfCourses: number;
   public numOfUnitsPerCourse: number;
   public builtBricks: Set<number>;
+  private brickCache = new Map<number, Brick>();
 
   constructor(wallWidth: number, wallHeight: number, wallBound: Bond) {
     const fullBrickUnit = brickParameters.fullBrick + brickParameters.headJoint;
@@ -23,7 +24,7 @@ export class Wall {
     this.numOfCourses = Math.floor(wallHeight / brickParameters.courseHeight);
     this.numOfUnitsPerCourse = Math.floor(wallWidth / halfBrickUnit);
 
-    this.grid = this.generateWall(
+    this.brickLayout = this.generateBrickLayout(
       this.numOfCourses,
       this.numOfUnitsPerCourse,
       bonds[wallBound]
@@ -31,24 +32,47 @@ export class Wall {
     this.builtBricks = new Set();
   }
 
-  private generateWall(
+  private generateBrickLayout(
     numOfCourses: number,
     numOfUnitsPerCourse: number,
     bond: BaseBond
   ) {
-    const wall: Brick[] = [];
+    const layout: BrickDescriptor[] = [];
     const filledUnits = new Set<string>();
 
     for (let course = 0; course < numOfCourses; course++) {
       bond.fillCourse({
-        brickList: wall,
+        brickList: layout,
         course,
         filledUnits,
         numOfUnitsPerCourse,
       });
     }
 
-    return wall;
+    return layout;
+  }
+
+  getBrick(index: number): Brick {
+    if (this.brickCache.has(index)) {
+      return this.brickCache.get(index)!;
+    }
+
+    const descriptor = this.brickLayout[index];
+    if (!descriptor) {
+      throw new Error(`No brick descriptor found for index ${index}`);
+    }
+
+    const brick = new Brick(
+      descriptor.column,
+      descriptor.course,
+      descriptor.type
+    );
+    this.brickCache.set(index, brick);
+    return brick;
+  }
+
+  get totalBricks(): number {
+    return this.brickLayout.length;
   }
 
   placeNextBrick(brickIndex: number) {
@@ -56,6 +80,6 @@ export class Wall {
   }
 
   isWallComplete() {
-    return this.builtBricks.size === this.grid.length;
+    return this.builtBricks.size === this.totalBricks;
   }
 }

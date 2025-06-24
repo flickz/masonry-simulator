@@ -13,30 +13,36 @@ export class StrideOptimizer {
     const strideMap = new Map<string, number[]>();
 
     // group bricks by stride window
-    wall.grid.forEach((brick, index) => {
-      const key = brick.stridePos.join(":");
+    for (let i = 0; i < wall.totalBricks; i++) {
+      const brick = wall.getBrick(i);
+      const key = brick.stridePos.join(",");
       if (!strideMap.has(key)) {
         strideMap.set(key, []);
       }
-      strideMap.get(key)!.push(index);
-    });
+      strideMap.get(key)!.push(i);
+    }
 
-    const keys = [...strideMap.keys()];
-    const heuristic = ([sx, sz], [tx, tz]) =>
+    const keys = [...strideMap.keys()].map(
+      (k) => k.split(",").map(Number) as [number, number]
+    );
+    const heuristic = (
+      [sx, sz]: [number, number],
+      [tx, tz]: [number, number]
+    ) =>
       this.sideWaysCost * Math.abs(sx - tx) +
       this.upDownCost * Math.abs(sz - tz);
 
-    const visited = new Set();
+    const visited = new Set<string>();
     const order: number[] = [];
-    let [cx, cz] = [0, 0]; // start pose
+    let currentPos: [number, number] = [0, 0]; // start pose
 
     while (visited.size < keys.length) {
-      let bestKey: string | undefined,
+      let bestKey: [number, number] | undefined,
         bestCost = Infinity;
       for (const key of keys) {
-        if (visited.has(key)) continue;
-        const [sx, sz] = key.split(":").map(Number);
-        const cost = heuristic([cx, cz], [sx, sz]);
+        const keyStr = key.join(",");
+        if (visited.has(keyStr)) continue;
+        const cost = heuristic(currentPos, key);
 
         if (cost < bestCost) {
           bestCost = cost;
@@ -44,12 +50,11 @@ export class StrideOptimizer {
         }
       }
 
-      if (!bestKey) break;
-      visited.add(bestKey);
-      const [nx, nz] = bestKey.split(":").map(Number);
-      cx = nx;
-      cz = nz;
-      order.push(...strideMap.get(bestKey)!);
+      if (!bestKey) break; // safety check
+      const bestKeyStr = bestKey.join(",");
+      visited.add(bestKeyStr);
+      currentPos = bestKey;
+      order.push(...strideMap.get(bestKeyStr)!);
     }
 
     return order;
