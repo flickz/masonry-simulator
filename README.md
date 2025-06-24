@@ -2,6 +2,8 @@
 
 A tool to simulate masonry walls.
 
+[How it works](./docs/how-it-works.md)
+
 ## Installation
 
 Requirements:
@@ -80,3 +82,13 @@ Or
 ```bash
 npm run simulator -- -w english -o regular
 ```
+
+## Screenshots
+
+### Stretcher Bond
+
+![Stretcher Bond](./docs/screenshot-stretcher.png)
+
+### English Bond
+
+![English Bond](./docs/screenshot-english.png)
