@@ -1,4 +1,3 @@
-import { Brick } from "../brick";
 import { BrickDescriptor, BrickType } from "../../types";
 import { brickTypeSpan } from "../../config";
 
