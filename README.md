@@ -48,10 +48,9 @@ npm run simulator -- -w english -o per-stride
 ## Screenshots
 
 ### Stretcher Bond
-![English Bond](./docs/screenshot-english.png)
 
-
-### English Bond
 ![Stretcher Bond](./docs/screenshot-stretcher.png)
 
+### English Bond
 
+![English Bond](./docs/screenshot-english.png)
